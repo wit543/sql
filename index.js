@@ -73,6 +73,7 @@ function handle_database(req,res) {
         connection.query("select * from account",function(err,rows){
             connection.release();
             if(!err) {
+                console.log(rows);
                 res.json(rows);
             }           
         });
