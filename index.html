@@ -14,22 +14,35 @@
     </style>
   </head>
   <body>
+  <div ng-app="myApp" ng-controller="customersCtrl"> </div>
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script 
+    src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-      var socket = io();
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
+
+      app.controller('myCtrl', function($scope, $http) {
+        $http({
+          method : "GET",
+          url : "http://ske12.xyz/wit/sql/",
+          port : "3000"
+        }).then(function mySucces(response) {
+            console.log(response.data);
+          }, function myError(response) {
+            console.log(response.statusText);
+        });
       });
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-      });
+      // $('form').submit(function(){
+      //   socket.emit('chat message', $('#m').val());
+      //   $('#m').val('');
+      //   return false;
+      // });
+      // socket.on('chat message', function(msg){
+      //   $('#messages').append($('<li>').text(msg));
+      // });
     </script>
   </body>
 </html>
