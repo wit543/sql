@@ -45,33 +45,47 @@
 //   console.log('Node app is running on port', app.get('port'));
 // });
 
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var pg = require('pg');
 
-app.set('port', (process.env.PORT || 5000));
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
-console.log("WWWWWW");
-pg.connect(process.env.DATABASE_URL, function(err, client,done) {
-  console.log(err);
-  if (err) throw err;
-  console.log('Connected to postgres! Getting schemas...');
+var express   =    require("express");
+var mysql     =    require('mysql');
+var app       =    express();
+
+var pool      =    mysql.createPool({
+    connectionLimit : 100, //important
+    host     : 'localhost',
+    user     : 'wit',
+    password : 'wit543',
+    database : 'ske',
+    debug    :  false
 });
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
-    client.query(msg).on('row',function(row){
+function handle_database(req,res) {
+    
+    pool.getConnection(function(err,connection){
+        if (err) {
+          connection.release();
+          res.json({"code" : 100, "status" : "Error in connection database"});
+          return;
+        }   
+
+        console.log('connected as id ' + connection.threadId);
         
-        io.emit('chat message',row);
-    });
-    io.emit('chat message', msg);
+        connection.query("select * from account",function(err,rows){
+            connection.release();
+            if(!err) {
+                res.json(rows);
+            }           
+        });
+
+        connection.on('error', function(err) {      
+              res.json({"code" : 100, "status" : "Error in connection database"});
+              return;     
+        });
   });
+}
+
+app.get("/",function(req,res){-
+        handle_database(req,res);
 });
 
-http.listen(app.get('port'), function(){
-  console.log('listening on port: '+app.get('port'));
-});
+app.listen(3000);
