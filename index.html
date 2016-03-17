@@ -27,8 +27,7 @@
       app.controller('myCtrl', function($scope, $http) {
         $http({
           method : "GET",
-          url : "http://ske12.xyz/wit/sql/",
-          port : "3000"
+          url : "http://ske12.xyz:3000/wit/sql/",
         }).then(function mySucces(response) {
             console.log(response.data);
           }, function myError(response) {
