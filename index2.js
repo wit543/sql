@@ -106,7 +106,7 @@ function getData(req,res) {
 }
 
 
-app.get("/wit/sql/sql",function(req,res){
+app.get("/wit/sql/sql/sql",function(req,res){
   console.log("XXXXX");
   getData(req,res);
 });
