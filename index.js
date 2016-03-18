@@ -85,8 +85,8 @@ function handle_database(req,res) {
   });
 }
 
-app.get("/sql",function(req,res){-
+app.get("/",function(req,res){-
         handle_database(req,res);
 });
 
-app.listen(80);
+app.listen(3000);
